@@ -1,4 +1,4 @@
-package mandelbrotset;
+package main;
 
 public class MandelbrotSet {
 
