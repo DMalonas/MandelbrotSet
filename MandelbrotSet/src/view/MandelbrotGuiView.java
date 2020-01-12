@@ -143,13 +143,44 @@ public class MandelbrotGuiView implements Observer, ActionListener {
     }
 	
     public void addActionListeners(ActionListener al) {
-            loadMenuItem.addActionListener(al);
-            saveMenuItem.addActionListener(al);
-            undoButton.addActionListener(al);
-            redoButton.addActionListener(al);
-            resetButton.addActionListener(al);
-            generateButton.addActionListener(al);
-            changeColourMappingButton.addActionListener(al);
+    		loadMenuItem.addActionListener(event -> controller.controlLoadFromFile());
+            //loadMenuItem.addActionListener(al);
+            saveMenuItem.addActionListener(event -> controller.controlSaveToFile());
+    		//saveMenuItem.addActionListener(al);
+            undoButton.addActionListener(event -> controller.controlUndo());
+            //undoButton.addActionListener(al);
+            redoButton.addActionListener(event -> controller.controlRedo());
+            //redoButton.addActionListener(al);
+            resetButton.addActionListener(event -> {
+                controller.controlReset();
+                maxIterationTextField.setText("50");
+                currentRatio = 1;
+            });
+            //resetButton.addActionListener(al);
+            generateButton.addActionListener(event -> {
+                // Read Max Iterations value from the user
+                maxIterations = Integer.parseInt(maxIterationTextField.getText()); 
+                changedScale = false;
+                // https://docs.oracle.com/javase/7/docs/api/java/awt/Rectangle.html
+                Rectangle selectedRectangle = mandelbrotViewPanel.getSelectedRectangle();
+                if (selectedRectangle != null) {   // If user has selected an area for zoom
+                    minRealPixel = (int) selectedRectangle.getMinX();
+                    maxRealPixel = (int) selectedRectangle.getMaxX();
+                    minImaginaryPixel = (int) selectedRectangle.getMinY();
+                    maxImaginaryPixel = (int) selectedRectangle.getMaxY();
+                    changedScale = true;
+                    currentRatio = currentRatio * (double)DEFAULT_FRAME_WIDTH / 
+                            (double)(maxRealPixel - minRealPixel);
+                    
+                }// Recreate image through controller. Controller reads pixels, model 
+                //will transform to real values
+                controller.controlGenerate(minRealPixel, maxRealPixel,
+                        minImaginaryPixel, maxImaginaryPixel, maxIterations, 
+                        changedScale, currentRatio);                    
+            });
+           //generateButton.addActionListener(al);
+            changeColourMappingButton.addActionListener(event -> controller.changeColourMapping());
+            //changeColourMappingButton.addActionListener(al);
     }
 
     @Override
@@ -181,46 +212,46 @@ public class MandelbrotGuiView implements Observer, ActionListener {
     
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == loadMenuItem) {
-            controller.controlLoadFromFile();
-        } 
-        else if(e.getSource() == saveMenuItem) {
-            controller.controlSaveToFile();
-        } 
-        else if(e.getSource() == undoButton) {
-            controller.controlUndo();
-        }
-        else if(e.getSource() == redoButton) {
-            controller.controlRedo();
-        }
-        else if(e.getSource() == resetButton) {
-            controller.controlReset();
-            maxIterationTextField.setText("50");
-            currentRatio = 1;
-        }
-        else if(e.getSource() == changeColourMappingButton) {
-            controller.changeColourMapping();
-        }
-        else if(e.getSource() == generateButton) {
-            // Read Max Iterations value from the user
-            maxIterations = Integer.parseInt(maxIterationTextField.getText()); 
-            changedScale = false;
-            // https://docs.oracle.com/javase/7/docs/api/java/awt/Rectangle.html
-            Rectangle selectedRectangle = mandelbrotViewPanel.getSelectedRectangle();
-            if (selectedRectangle != null) {   // If user has selected an area for zoom
-                minRealPixel = (int) selectedRectangle.getMinX();
-                maxRealPixel = (int) selectedRectangle.getMaxX();
-                minImaginaryPixel = (int) selectedRectangle.getMinY();
-                maxImaginaryPixel = (int) selectedRectangle.getMaxY();
-                changedScale = true;
-                currentRatio = currentRatio * (double)DEFAULT_FRAME_WIDTH / 
-                        (double)(maxRealPixel - minRealPixel);
-                
-            }// Recreate image through controller. Controller reads pixels, model 
-            //will transform to real values
-            controller.controlGenerate(minRealPixel, maxRealPixel,
-                    minImaginaryPixel, maxImaginaryPixel, maxIterations, 
-                    changedScale, currentRatio);    
-        }
+//        if(e.getSource() == loadMenuItem) {
+//            controller.controlLoadFromFile();
+//        } 
+//        else if(e.getSource() == saveMenuItem) {
+//            controller.controlSaveToFile();
+//        } 
+//        else if(e.getSource() == undoButton) {
+//            controller.controlUndo();
+//        }
+//        else if(e.getSource() == redoButton) {
+//            controller.controlRedo();
+//        }
+//        else if(e.getSource() == resetButton) {
+//            controller.controlReset();
+//            maxIterationTextField.setText("50");
+//            currentRatio = 1;
+//        }
+//        else if(e.getSource() == changeColourMappingButton) {
+//            controller.changeColourMapping();
+//        }
+//        else if(e.getSource() == generateButton) {
+//            // Read Max Iterations value from the user
+//            maxIterations = Integer.parseInt(maxIterationTextField.getText()); 
+//            changedScale = false;
+//            // https://docs.oracle.com/javase/7/docs/api/java/awt/Rectangle.html
+//            Rectangle selectedRectangle = mandelbrotViewPanel.getSelectedRectangle();
+//            if (selectedRectangle != null) {   // If user has selected an area for zoom
+//                minRealPixel = (int) selectedRectangle.getMinX();
+//                maxRealPixel = (int) selectedRectangle.getMaxX();
+//                minImaginaryPixel = (int) selectedRectangle.getMinY();
+//                maxImaginaryPixel = (int) selectedRectangle.getMaxY();
+//                changedScale = true;
+//                currentRatio = currentRatio * (double)DEFAULT_FRAME_WIDTH / 
+//                        (double)(maxRealPixel - minRealPixel);
+//                
+//            }// Recreate image through controller. Controller reads pixels, model 
+//            //will transform to real values
+//            controller.controlGenerate(minRealPixel, maxRealPixel,
+//                    minImaginaryPixel, maxImaginaryPixel, maxIterations, 
+//                    changedScale, currentRatio);    
+//        }
     }
 }
