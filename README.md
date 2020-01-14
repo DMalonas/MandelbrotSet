@@ -1,4 +1,5 @@
-A	GUI-driven	Fractal	generator	that	allows	the	user	to	view	and	explore	the	Mandelbrot	set	graphically
+A	GUI-driven	Fractal	generator	that	allows	the	user	to	view	and	explore	the	Mandelbrot	set	graphically.
+
 MVC architecture implementation in Java. Create the mandelbrot set.
   
   
